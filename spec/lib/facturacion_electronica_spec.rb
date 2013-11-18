@@ -23,17 +23,17 @@ describe FacturacionElectronica do
         moneda:             'MXN'
       },
       conceptos: [
-        { cantidad: 3,
-          unidad: 'PIEZA',
-          descripcion: 'CAJA DE HOJAS BLANCAS TAMANO CARTA',
-          valorUnitario: 450.00,
-          importe: 1350.00
+        { cantidad:         3,
+          unidad:           'PIEZA',
+          descripcion:      'CAJA DE HOJAS BLANCAS TAMANO CARTA',
+          valorUnitario:    450.00,
+          importe:          1350.00
         },
-        { cantidad: 8,
-          unidad: 'PIEZA',
-          descripcion: 'RECOPILADOR PASTA DURA 3 ARILLOS',
-          valorUnitario: 18.50,
-          importe: 148.00
+        { cantidad:         8,
+          unidad:           'PIEZA',
+          descripcion:      'RECOPILADOR PASTA DURA 3 ARILLOS',
+          valorUnitario:    18.50,
+          importe:          148.00
         },
       ],
       emisor: {
@@ -71,12 +71,12 @@ describe FacturacionElectronica do
         nombre:             'PUBLICO EN GENERAL',
         domicilioFiscal: {
           calle:            'CERRADA DE AZUCENAS',
-          noExterior:       "109",
-          colonia:          "REFORMA",
-          municipio:        "Oaxaca de Juarez",
-          estado:           "Oaxaca",
-          pais:             "Mexico",
-          codigoPostal:     "68050"
+          noExterior:       '109',
+          colonia:          'REFORMA',
+          municipio:        'Oaxaca de Juarez',
+          estado:           'Oaxaca',
+          pais:             'Mexico',
+          codigoPostal:     '68050'
         }
       },
       impuestos: {

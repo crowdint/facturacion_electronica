@@ -2,13 +2,16 @@ require "facturacion_electronica/version"
 require 'cfdi'
 
 module FacturacionElectronica
+  #PACS = { :'FacturacionModerna' => PacProviderFM,
+           #:'LoFacturo' => PacProviderLF }
 
   def self.stamp_bill(user_keys, pac, certificate, key, bill)
     @bill = bill
     @certificate = CFDI::Certificado.new certificate
     @key = CFDI::Key.new key, bill_emissor_pass
-    tax_receipt_xml = generate_xml
-    tax_receipt_xml
+    #pac_service = PACS[pac].new generate_xml
+    #pac_service.rining
+    generate_xml
   end
 
   private
