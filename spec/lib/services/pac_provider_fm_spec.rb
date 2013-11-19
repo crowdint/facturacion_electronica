@@ -1,4 +1,4 @@
-require 'pac_provider_fm'
+require 'services/pac_provider_fm'
 require 'bill_xml_request'
 require 'fixtures/bill_example'
 

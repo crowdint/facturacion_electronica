@@ -1,4 +1,4 @@
-require 'pac_provider_service'
+require 'services/pac_provider_service'
 
 describe PacProviderService do
   let(:xml_file) do

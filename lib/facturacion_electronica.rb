@@ -1,5 +1,5 @@
 require 'facturacion_electronica/version'
-require 'pac_provider_fm'
+require 'services/pac_provider_fm'
 require 'bill_xml_request'
 
 module FacturacionElectronica
