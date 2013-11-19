@@ -1,4 +1,5 @@
 require 'facturacion_electronica'
+require 'fixtures/bill_example'
 
 describe FacturacionElectronica do
 
@@ -6,93 +7,49 @@ describe FacturacionElectronica do
     { id: 'UsuarioPruebasWS',
       pass: 'b9ec2afa3361a59af4b4d102d3f704eabdf097d4' }
   end
-  let(:sat_certificate){ File.open './spec/docs_examples/CertificadosDemo-FM/TUMG620310R95/TUMG620310R95_1210241209S.cer' }
-  let(:sat_key){ File.open 'spec/docs_examples/CertificadosDemo-FM/TUMG620310R95/TUMG620310R95_1210241209S.key.pem' }
-  let(:pac_provider){ 'FacturacionModerna' }
-  let(:bill) do
+  let(:biller) do
     {
-      factura: {
-        folio: 4,
-        serie: 'AA',
-        fecha: Time.now,
-        formaDePago:        'Pago en una sola exhibicion',
-        condicionesDePago:  'Contado',
-        metodoDePago:       'Cheque',
-        lugarExpedicion:    'San Pedro Garza Garcia, Nuevo Leon, Mexico',
-        NumCtaPago:         'No identificado',
-        moneda:             'MXN'
-      },
-      conceptos: [
-        { cantidad:         3,
-          unidad:           'PIEZA',
-          descripcion:      'CAJA DE HOJAS BLANCAS TAMANO CARTA',
-          valorUnitario:    450.00,
-          importe:          1350.00
-        },
-        { cantidad:         8,
-          unidad:           'PIEZA',
-          descripcion:      'RECOPILADOR PASTA DURA 3 ARILLOS',
-          valorUnitario:    18.50,
-          importe:          148.00
-        },
-      ],
-      emisor: {
-        rfc:                'TUMG620310R95',
-        nombre:             'FACTURACION MODERNA SA DE CV',
-        domicilioFiscal: {
-          calle:            'RIO GUADALQUIVIR',
-          noExterior:       '238',
-          noInterior:       '314',
-          colonia:          'ORIENTE DEL VALLE',
-          localidad:        'No se que sea esto, pero va',
-          referencia:       'Sin Referencia',
-          municipio:        'San Pedro Garza Garcia',
-          estado:           'Nuevo Leon',
-          pais:             'Mexico',
-          codigoPostal:     '66220'
-        },
-        expedidoEn: {
-          calle:            'RIO GUADALQUIVIR',
-          noExterior:       '238',
-          noInterior:       '314',
-          colonia:          'ORIENTE DEL VALLE',
-          localidad:        'No se que sea esto, pero va',
-          referencia:       'Sin Referencia',
-          municipio:        'San Pedro Garza Garcia',
-          estado:           'Nuevo Leon',
-          pais:             'Mexico',
-          codigoPostal:     '66220'
-        },
-        regimenFiscal:      'REGIMEN GENERAL DE LEY PERSONAS MORALES'
-      },
-      emisor_pass:          '12345678a',
-      cliente: {
-        rfc:                'XAXX010101000',
-        nombre:             'PUBLICO EN GENERAL',
-        domicilioFiscal: {
-          calle:            'CERRADA DE AZUCENAS',
-          noExterior:       '109',
-          colonia:          'REFORMA',
-          municipio:        'Oaxaca de Juarez',
-          estado:           'Oaxaca',
-          pais:             'Mexico',
-          codigoPostal:     '68050'
-        }
-      },
-      impuestos: {
-        impuesto:           'IVA'
-      }
+      certificate:  File.open('./spec/docs_examples/CertificadosDemo-FM/TUMG620310R95/TUMG620310R95_1210241209S.cer'),
+      key:          File.open('spec/docs_examples/CertificadosDemo-FM/TUMG620310R95/TUMG620310R95_1210241209S.key.pem'),
+      password:     '12345678a'
     }
   end
+  let(:pac_provider){ 'FacturacionModerna' }
+  let(:bill) do
+    BillExample.request
+  end
 
-  describe '.stamp_bill' do
-    context 'When request for stamp a bill with FM' do
-      it 'returns a valid respose' do
-        expect(subject.stamp_bill(user_keys,
-                                  pac_provider,
-                                  sat_certificate,
-                                  sat_key,
-                                  bill)).to include('cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3"')
+  describe '.create_cfdi' do
+    context 'When request for new cfdi with valid information' do
+      before do
+        @response = subject.create_cfdi({
+          user_keys:           user_keys,
+          pac_provider:        pac_provider,
+          biller:              biller,
+          bill:                bill})
+      end
+
+      it 'returns a valid stamped bill' do
+        expect(@response[:status]).to be_true
+      end
+
+      it 'contains a valid SAT rining' do
+        expect(@response[:xml]).to include('<cfdi:Complemento><tfd:TimbreFiscalDigital')
+      end
+    end
+
+    context 'When request for a new cfdi without valid user keys' do
+      before do
+        @response = subject.create_cfdi({
+          user_keys:           user_keys,
+          pac_provider:        pac_provider,
+          biller:              biller,
+          bill:                bill})
+      end
+
+      it 'returns an invalid status' do
+        pending
+        expect(@response.status).to be_false
       end
     end
   end

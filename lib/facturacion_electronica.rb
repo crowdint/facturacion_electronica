@@ -1,17 +1,16 @@
-require "facturacion_electronica/version"
+require 'facturacion_electronica/version'
 require 'cfdi'
+require 'pac_provider_fm'
 
 module FacturacionElectronica
-  #PACS = { :'FacturacionModerna' => PacProviderFM,
-           #:'LoFacturo' => PacProviderLF }
+  PACS = { :'FacturacionModerna' => PacProviderFM }
 
-  def self.stamp_bill(user_keys, pac, certificate, key, bill)
-    @bill = bill
-    @certificate = CFDI::Certificado.new certificate
-    @key = CFDI::Key.new key, bill_emissor_pass
-    #pac_service = PACS[pac].new generate_xml
-    #pac_service.rining
-    generate_xml
+  def self.create_cfdi(request)
+    @bill = request[:bill]
+    @certificate = CFDI::Certificado.new request[:biller][:certificate]
+    @key = CFDI::Key.new request[:biller][:key], request[:biller][:password]
+    pac_service = PacProviderFM.new generate_xml_request
+    pac_service.rining
   end
 
   private
@@ -31,7 +30,7 @@ module FacturacionElectronica
     end
 
     #Generate an XML file by CFDI gem
-    def generate_xml
+    def generate_xml_request
       tax_receipt = generate_tax_receipt
       @certificate.certifica tax_receipt
       @key.sella tax_receipt
