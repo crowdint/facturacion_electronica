@@ -1,4 +1,6 @@
 require 'pac_provider_fm'
+require 'bill_xml_request'
+require 'fixtures/bill_example'
 
 describe PacProviderFM do
   let(:user_keys) do
@@ -11,9 +13,18 @@ describe PacProviderFM do
       ssl_verify_mode: :none
     }
   end
+  let(:biller) do
+    {
+      certificate:  File.open('./spec/docs_examples/CertificadosDemo-FM/TUMG620310R95/TUMG620310R95_1210241209S.cer'),
+      key:          File.open('spec/docs_examples/CertificadosDemo-FM/TUMG620310R95/TUMG620310R95_1210241209S.key.pem'),
+      password:     '12345678a'
+    }
+  end
+  let(:bill) do
+    BillExample.request
+  end
   let(:xml_file) do
-    xml = File.open './spec/docs_examples/base_xml_file.xml'
-    xml.read
+    BillXmlRequest.new_xml(biller, bill).generate_xml_request
   end
 
   subject{ PacProviderFM.new xml_file }
@@ -25,7 +36,6 @@ describe PacProviderFM do
       end
 
       specify do
-        pending
         expect(@response[:status]).to be_true
       end
     end
