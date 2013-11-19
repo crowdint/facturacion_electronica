@@ -4,8 +4,14 @@ require 'fixtures/bill_example'
 describe FacturacionElectronica do
 
   let(:user_keys) do
-    { id: 'UsuarioPruebasWS',
-      pass: 'b9ec2afa3361a59af4b4d102d3f704eabdf097d4' }
+    { id:              'UsuarioPruebasWS',
+      password:        'b9ec2afa3361a59af4b4d102d3f704eabdf097d4',
+      namespace:       'https://t2demo.facturacionmoderna.com/timbrado/soap',
+      endpoint:        'https://t2demo.facturacionmoderna.com/timbrado/soap',
+      wsdl:            'https://t2demo.facturacionmoderna.com/timbrado/wsdl',
+      log:             false,
+      ssl_verify_mode: :none
+    }
   end
   let(:biller) do
     {

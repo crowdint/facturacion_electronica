@@ -10,7 +10,7 @@ module FacturacionElectronica
     @certificate = CFDI::Certificado.new request[:biller][:certificate]
     @key = CFDI::Key.new request[:biller][:key], request[:biller][:password]
     pac_service = PacProviderFM.new generate_xml_request
-    pac_service.rining
+    pac_service.rining request[:user_keys]
   end
 
   private
@@ -58,5 +58,4 @@ module FacturacionElectronica
       @bill[:impuestos]
     end
   end
-
 end
