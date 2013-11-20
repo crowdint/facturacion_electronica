@@ -20,15 +20,15 @@ module FacturacionElectronica
 
   class << self
     def valid_params? request
-      result =  is_valid?(request[:user_keys])
-      (result == false) || result = is_valid?(request[:pac_provider])
-      (result == false) || result = is_valid?(request[:biller])
-      (result == false) || result = is_valid?(request[:bill])
+      result = true
+      [:user_keys, :pac_provider, :biller, :bill].each do |k|
+        result = (request.has_key?(k) && is_valid?(request[k])) unless result == false
+      end
       result
     end
 
     def is_valid? param_value
-      !param_value.nil? && !param_value.empty?
+      !param_value.empty?
     end
   end
 end
