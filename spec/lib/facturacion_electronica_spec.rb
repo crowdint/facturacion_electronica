@@ -2,7 +2,6 @@ require 'facturacion_electronica'
 require 'fixtures/bill_example'
 
 describe FacturacionElectronica do
-
   let(:user_keys) do
     { id:              'UsuarioPruebasWS',
       password:        'b9ec2afa3361a59af4b4d102d3f704eabdf097d4',
@@ -44,20 +43,161 @@ describe FacturacionElectronica do
       end
     end
 
-    context 'When request for a new cfdi without valid user keys' do
-      before do
-        @response = subject.create_cfdi({
-          user_keys:           user_keys,
-          pac_provider:        pac_provider,
-          biller:              biller,
-          bill:                bill})
+    context 'When request for a new cfdi with invalid params' do
+      context 'and user keys' do
+        let(:request) do
+          { user_keys:           '',
+            pac_provider:        pac_provider,
+            biller:              biller,
+            bill:                bill }
+        end
+
+        context 'has a nil value' do
+          before do
+            @response = subject.create_cfdi(request)
+          end
+
+          it 'returns an invalid status' do
+            expect(@response[:status]).to be_false
+          end
+
+          it 'returns an error message' do
+            expect(@response[:error_msg]).to eql('Parametros invalidos')
+          end
+        end
+
+        context 'not exist in the request' do
+          before do
+            request.delete :user_keys
+            @response = subject.create_cfdi(request)
+          end
+
+          it 'returns an invalid status' do
+            expect(@response[:status]).to be_false
+          end
+
+          it 'returns an error message' do
+            expect(@response[:error_msg]).to eql('Parametros invalidos')
+          end
+        end
       end
 
-      it 'returns an invalid status' do
-        pending
-        expect(@response.status).to be_false
+      context 'and pac provider' do
+        let(:request) do
+          { user_keys:           user_keys,
+            pac_provider:        '',
+            biller:              biller,
+            bill:                bill }
+        end
+
+        context 'has a nil value' do
+          before do
+            @response = subject.create_cfdi(request)
+          end
+
+          it 'returns an invalid status' do
+            expect(@response[:status]).to be_false
+          end
+
+          it 'returns an error message' do
+            expect(@response[:error_msg]).to eql('Parametros invalidos')
+          end
+        end
+
+        context 'not exist in the request' do
+          before do
+            request.delete :pac_provider
+            @response = subject.create_cfdi(request)
+          end
+
+          it 'returns an invalid status' do
+            expect(@response[:status]).to be_false
+          end
+
+          it 'returns an error message' do
+            expect(@response[:error_msg]).to eql('Parametros invalidos')
+          end
+        end
+
+      end
+
+      context 'and biller' do
+        let(:request) do
+          { user_keys:           user_keys,
+            pac_provider:        pac_provider,
+            biller:              '',
+            bill:                bill }
+        end
+
+        context 'has a nil value' do
+          before do
+            @response = subject.create_cfdi(request)
+          end
+
+          it 'returns an invalid status' do
+            expect(@response[:status]).to be_false
+          end
+
+          it 'returns an error message' do
+            expect(@response[:error_msg]).to eql('Parametros invalidos')
+          end
+        end
+
+        context 'not exist in the request' do
+          before do
+            request.delete :biller
+            @response = subject.create_cfdi(request)
+          end
+
+          it 'returns an invalid status' do
+            expect(@response[:status]).to be_false
+          end
+
+          it 'returns an error message' do
+            expect(@response[:error_msg]).to eql('Parametros invalidos')
+          end
+        end
+
+      end
+
+      context 'and bill' do
+        let(:request) do
+          { user_keys:           user_keys,
+            pac_provider:        pac_provider,
+            biller:              biller,
+            bill:                '' }
+        end
+
+        context 'has a nil value' do
+          before do
+            @response = subject.create_cfdi(request)
+          end
+
+          it 'returns an invalid status' do
+            expect(@response[:status]).to be_false
+          end
+
+          it 'returns an error message' do
+            expect(@response[:error_msg]).to eql('Parametros invalidos')
+          end
+        end
+
+        context 'not exist in the request' do
+          before do
+            request.delete :bill
+            @response = subject.create_cfdi(request)
+          end
+
+          it 'returns an invalid status' do
+            expect(@response[:status]).to be_false
+          end
+
+          it 'returns an error message' do
+            expect(@response[:error_msg]).to eql('Parametros invalidos')
+          end
+        end
+
       end
     end
   end
-
 end
