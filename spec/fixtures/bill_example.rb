@@ -1,57 +1,10 @@
-# FacturacionElectronica
-
-This a gem to dispatch a request of a new CFDi(comprobante fiscal
-digital) through a different PAC() providers. Right now we connecting to the
-FacturacionModerna web service.
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'facturacion_electronica'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install facturacion_electronica
-
-## Usage
-
-You need to send a request with:
-- user keys: This is used for the PAC provider that you specify, the
-  internal structure of this hash allows it.
-- PAC provider: When you send a new CFDi bill request you need to
-  specify the PAC provider. Currently we support FacturacionModerna.
-- biller: Here we send the official documents, the ones provided by SAT to the
-  billers.
-- bill: All the information about the bill that is requested to be
-  stamped through the PAC provider.
-
-Request: 
-```
-{ user_keys: {
-    id:              'UsuarioPruebasWS',
-    password:        'b9ec2afa3361a59af4b4d102d3f704eabdf097d4',
-    namespace:       'https://t2demo.facturacionmoderna.com/timbrado/soap',
-    endpoint:        'https://t2demo.facturacionmoderna.com/timbrado/soap',
-    wsdl:            'https://t2demo.facturacionmoderna.com/timbrado/wsdl',
-    log:             false,
-    ssl_verify_mode: :none },
-  pac_provider: 'FacturacionModerna',  
-  biller: {
-    certificate: CertificateFile.cer,
-    key:         KeyFile.key.pem,
-    password:    'billerpass'
-  } 
-  bill: {
+module BillExample
+  def self.request
     {
       factura: {
-        folio:              '101',
-        serie:              'AA',
-        fecha:              CurrentDate,
+        folio:              [101, 102, 103, 104, 105].sample,
+        serie:              ['AA', 'BB', 'CC', 'DD'].sample,
+        fecha:              Time.now,
         formaDePago:        'Pago en una sola exhibicion',
         condicionesDePago:  'Contado',
         metodoDePago:       'Cheque',
@@ -102,7 +55,7 @@ Request:
         },
         regimenFiscal:      'REGIMEN GENERAL DE LEY PERSONAS MORALES'
       },
-      emisor_pass:          'billerpass',
+      emisor_pass:          '12345678a',
       cliente: {
         rfc:                'XAXX010101000',
         nombre:             'PUBLICO EN GENERAL',
@@ -120,24 +73,5 @@ Request:
         impuesto:           'IVA'
       }
     }
-  }
-}
-```
-
-Response:
-```
-{ 
-  status: true / false,
-  xml: bill_xml_file,
-  stamp: sat_stamp_file,
-  pdf: bill_pdf_file
-}
-```
-
-## Contributing
-
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+  end
+end
