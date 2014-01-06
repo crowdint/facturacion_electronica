@@ -3,7 +3,7 @@ require 'services/pac_provider_fm'
 require 'bill_xml_request'
 
 module FacturacionElectronica
-  PACS = { :'FacturacionModerna' => PacProviderFM }
+  PACS = { 'FacturacionModerna' => PacProviderFM }
 
   def self.create_cfdi request
     if valid_params?(request)
@@ -14,6 +14,11 @@ module FacturacionElectronica
     else
       { status: false, error_msg: 'Parametros invalidos' }
     end
+  end
+
+  def self.register_rfc request
+    pac_service = choose_service(request[:pac_provider], '')
+    pac_service.enable_rfc request[:user_keys], request
   end
 
   private
@@ -30,5 +35,10 @@ module FacturacionElectronica
     def is_valid? param_value
       !param_value.empty?
     end
+
+    def choose_service(pac_provider, xml_request)
+      PACS[pac_provider].new xml_request
+    end
   end
+
 end

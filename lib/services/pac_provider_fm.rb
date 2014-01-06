@@ -9,6 +9,14 @@ class PacProviderFM < PacProviderService
     parse response
   end
 
+  def enable_rfc user_keys, request
+    config_client user_keys
+    response = FmTimbradoCfdi.subir_certificado request[:biller][:rfc],
+      request[:biller][:certificate], request[:biller][:key],
+      request[:biller][:password]
+    response.valid?
+  end
+
   private
 
   def parse response

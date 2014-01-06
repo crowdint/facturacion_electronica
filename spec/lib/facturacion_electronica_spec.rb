@@ -16,7 +16,8 @@ describe FacturacionElectronica do
     {
       certificate:  File.open('./spec/docs_examples/CertificadosDemo-FM/TUMG620310R95/TUMG620310R95_1210241209S.cer'),
       key:          File.open('spec/docs_examples/CertificadosDemo-FM/TUMG620310R95/TUMG620310R95_1210241209S.key.pem'),
-      password:     '12345678a'
+      password:     '12345678a',
+      rfc:          'TUMG620310R95'
     }
   end
   let(:pac_provider){ 'FacturacionModerna' }
@@ -197,6 +198,31 @@ describe FacturacionElectronica do
           end
         end
 
+      end
+    end
+  end
+
+  describe '.register_rfc' do
+    context 'When activate a new rfc' do
+      context 'whit valid keys' do
+        let(:biller) do
+            {
+              certificate:  File.read('./spec/docs_examples/CertificadosDemo-FM/TUMG620310R95/TUMG620310R95_1210241209S.cer'),
+              key:          File.read('./spec/docs_examples/CertificadosDemo-FM/TUMG620310R95/TUMG620310R95_1210241209S.key'),
+              password:     '12345678a',
+              rfc:          'TUMG620310R95'
+            }
+          end
+        let(:request) do
+          { user_keys:           user_keys,
+            pac_provider:        pac_provider,
+            biller:              biller,
+          }
+        end
+
+        it 'returns a valid response' do
+          expect(subject.register_rfc(request)).to be_true
+        end
       end
     end
   end
