@@ -27,7 +27,7 @@ describe PacProviderFM do
     BillXmlRequest.new_xml(biller, bill).generate_xml_request
   end
 
-  subject{ PacProviderFM.new xml_file }
+  subject{ PacProviderFM.new xml_file, user_keys }
 
   describe '#rining' do
     context 'When requesting a valid xml file with valid user keys' do
