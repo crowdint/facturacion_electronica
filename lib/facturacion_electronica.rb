@@ -3,7 +3,7 @@ require 'services/pac_provider_fm'
 require 'bill_xml_request'
 
 module FacturacionElectronica
-  PACS = { :'FacturacionModerna' => PacProviderFM }
+  PACS = { 'FacturacionModerna' =>  PacProviderFM }
 
   def self.create_cfdi request
     if valid_params?(request)
