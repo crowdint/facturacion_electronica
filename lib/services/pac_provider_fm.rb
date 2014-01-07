@@ -27,9 +27,11 @@ class PacProviderFM < PacProviderService
 
   def parse response
     { status: response.valid?,
-      xml: response.xml,
-      stamp: response.timbre || '',
-      pdf: response.pdf || ''
+      xml:    response.xml,
+      stamp:  response.timbre || '',
+      pdf:    response.pdf || '',
+      cbb:    response.cbb || '',
+      errors: response.errors
     }
   end
 
