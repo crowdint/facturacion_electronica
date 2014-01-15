@@ -16,12 +16,48 @@ describe FacturacionElectronica do
     {
       certificate:  File.open('./spec/docs_examples/CertificadosDemo-FM/TUMG620310R95/TUMG620310R95_1210241209S.cer'),
       key:          File.open('spec/docs_examples/CertificadosDemo-FM/TUMG620310R95/TUMG620310R95_1210241209S.key.pem'),
-      password:     '12345678a'
+      password:     '12345678a',
+      rfc:          'TUMG620310R95'
     }
   end
   let(:pac_provider){ 'FacturacionModerna' }
   let(:bill) do
     BillExample.request
+  end
+
+  describe '.cancel_cfdi' do
+    context 'When request to cancel a previus cfdi' do
+      let(:request) do
+        { user_keys:           user_keys,
+          pac_provider:        pac_provider,
+          biller:              biller,
+          uuid:                'AA234BB' }
+      end
+
+      context 'with a valid uuid' do
+        before do
+          valid_cfdi = subject.create_cfdi({
+            user_keys:           user_keys,
+            pac_provider:        pac_provider,
+            biller:              biller,
+            bill:                bill})
+          xml = Nokogiri::XML valid_cfdi[:xml]
+          uuid = xml.xpath('//tfd:TimbreFiscalDigital', 'tfd' => 'http://www.sat.gob.mx/TimbreFiscalDigital').attr('UUID').value
+          request[:uuid] = uuid
+        end
+
+        it 'successfully canceled' do
+          expect(subject.cancel_cfdi(request)).to be_true
+        end
+      end
+
+      context 'with an invalid uuid' do
+        let(:error_message){ 'Formato Incorrecto de UUID.' }
+        it 'returns an error mesage' do
+          expect(subject.cancel_cfdi(request)).to eql(error_message)
+        end
+      end
+    end
   end
 
   describe '.create_cfdi' do
@@ -197,6 +233,53 @@ describe FacturacionElectronica do
           end
         end
 
+      end
+    end
+  end
+
+  describe '.register_rfc' do
+    context 'When activate a new rfc' do
+      context 'with valid keys' do
+        let(:biller) do
+          {
+            certificate:  File.read('./spec/docs_examples/CertificadosDemo-FM/TUMG620310R95/TUMG620310R95_1210241209S.cer'),
+            key:          File.read('./spec/docs_examples/CertificadosDemo-FM/TUMG620310R95/TUMG620310R95_1210241209S.key'),
+            password:     '12345678a',
+            rfc:          'TUMG620310R95'
+          }
+        end
+        let(:request) do
+          { user_keys:           user_keys,
+            pac_provider:        pac_provider,
+            biller:              biller,
+          }
+        end
+
+        it 'returns a valid response' do
+          expect(subject.register_rfc(request)).to be_true
+        end
+      end
+
+      context 'with invalid keys' do
+        let(:biller) do
+          {
+            certificate:  File.read('./spec/docs_examples/CertificadosDemo-FM/TUMG620310R95/TUMG620310R95_1210241209S.cer'),
+            key:          File.read('./spec/docs_examples/CertificadosDemo-FM/TUMG620310R95/TUMG620310R95_1210241209S.key'),
+            password:     '12345678b',
+            rfc:          'TUMG620310R95'
+          }
+        end
+        let(:request) do
+          { user_keys:           user_keys,
+            pac_provider:        pac_provider,
+            biller:              biller,
+          }
+        end
+        let(:error_message){ 'Contrasenia de la clave privada invalida.' }
+
+        it 'returns an error message' do
+          expect(subject.register_rfc(request)).to eql(error_message)
+        end
       end
     end
   end
