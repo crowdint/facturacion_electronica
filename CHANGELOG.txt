@@ -1,0 +1,10 @@
+VERSION 0.1.0
+=============
+* Manage errors responses
+* Add ability to cancel CFDI
+* Add ability to register user's RFC
+* Update fm_timbrado_cfdi gem
+
+VERSION 0.0.1
+=============
+* Ringing CFDI through PAC FacturacionModerna(FM) webservice
