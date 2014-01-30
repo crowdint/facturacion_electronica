@@ -4,3 +4,4 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'fm_timbrado_cfdi', git: 'git@github.com:crowdint/fm_timbrado_cfdi.git'
+gem 'cfdi', git: 'git@github.com:crowdint/CFDI.git'
