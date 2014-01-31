@@ -53,8 +53,12 @@ describe FacturacionElectronica do
 
       context 'with an invalid uuid' do
         let(:error_message){ 'Formato Incorrecto de UUID.' }
+        before do
+          @response = subject.cancel_cfdi(request)
+        end
+
         it 'returns an error mesage' do
-          expect(subject.cancel_cfdi(request)).to eql(error_message)
+          expect(@response[:errors][:message]).to eql(error_message)
         end
       end
     end
@@ -277,8 +281,12 @@ describe FacturacionElectronica do
         end
         let(:error_message){ 'Contrasenia de la clave privada invalida.' }
 
+        before do
+          @response = subject.register_rfc(request)
+        end
+
         it 'returns an error message' do
-          expect(subject.register_rfc(request)).to eql(error_message)
+          expect(@response[:errors][:message]).to eql(error_message)
         end
       end
     end
