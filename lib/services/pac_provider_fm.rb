@@ -6,7 +6,7 @@ class PacProviderFM < PacProviderService
   def cancel user_keys, rfc, uuid
     config_client
     response = FmTimbradoCfdi.cancelar rfc, uuid
-    response.valid? || return_error_message(Nokogiri::XML(response.error))
+    parse_cfdi response
   end
 
   def enable_rfc user_keys, request
@@ -14,7 +14,7 @@ class PacProviderFM < PacProviderService
     response = FmTimbradoCfdi.subir_certificado request[:rfc],
       request[:certificate], request[:key],
       request[:password]
-    response.valid? || return_error_message(Nokogiri::XML(response.error))
+    parse_cfdi response
   end
 
   def rining user_keys
@@ -35,6 +35,15 @@ class PacProviderFM < PacProviderService
     }
   end
 
+  def parse_cfdi response
+    {
+      status: response.valid?,
+      xml: response.xml,
+      success: return_success_message(response.xml),
+      errors: return_error_message(response.error)
+    }
+  end
+
   def config_client
     FmTimbradoCfdi.configurar do |config|
       config.user_id         = @user_keys[:id]
@@ -48,7 +57,17 @@ class PacProviderFM < PacProviderService
   end
 
   def return_error_message xml
-    xml.xpath('//faultstring').text()
+    {
+      code:    Nokogiri::XML(xml).xpath('//faultcode').text(),
+      message: Nokogiri::XML(xml).xpath('//faultstring').text()
+    }
+  end
+
+  def return_success_message xml
+    {
+      code:    Nokogiri::XML(xml).xpath('//Code').text,
+      message: Nokogiri::XML(xml).xpath('//Message').text
+    }
   end
 
 end
