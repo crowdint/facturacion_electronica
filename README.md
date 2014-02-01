@@ -30,7 +30,7 @@ You need to send a request with:
 - bill: All the information about the bill that is requested to be
   stamped through the PAC provider.
 
-Request: 
+Request to rining a CFDI:
 ```
 { user_keys: {
     id:              'UsuarioPruebasWS',
@@ -131,6 +131,46 @@ Response:
   xml: bill_xml_file,
   stamp: sat_stamp_file,
   pdf: bill_pdf_file
+}
+```
+
+Request to cancel a CFDI:
+```
+{
+  user_keys: {
+    id:              'UsuarioPruebasWS',
+    password:        'b9ec2afa3361a59af4b4d102d3f704eabdf097d4',
+    namespace:       'https://t2demo.facturacionmoderna.com/timbrado/soap',
+    endpoint:        'https://t2demo.facturacionmoderna.com/timbrado/soap',
+    wsdl:            'https://t2demo.facturacionmoderna.com/timbrado/wsdl',
+    log:             false,
+    ssl_verify_mode: :none },
+  pac_provider: 'FacturacionModerna',
+  biller: {
+    rfc: 'TUMG620310R95'
+  },
+  UUID: 'ASDD-1123-BDFT'
+}
+```
+
+Request to register SAT keys(FacturacionModerna example):
+```
+{
+  user_keys: {
+    id:              'UsuarioPruebasWS',
+    password:        'b9ec2afa3361a59af4b4d102d3f704eabdf097d4',
+    namespace:       'https://t2demo.facturacionmoderna.com/timbrado/soap',
+    endpoint:        'https://t2demo.facturacionmoderna.com/timbrado/soap',
+    wsdl:            'https://t2demo.facturacionmoderna.com/timbrado/wsdl',
+    log:             false,
+    ssl_verify_mode: :none },
+  pac_provider: 'FacturacionModerna',
+  biller: {
+    rfc:          'TUMG620310R95',
+    certificate:  CertificateFile.cer,
+    key:          KeyFile.key.pem,
+    password:     'billerpass'
+  }
 }
 ```
 
