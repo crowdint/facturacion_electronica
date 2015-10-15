@@ -36,7 +36,7 @@ describe PacProviderFM do
       end
 
       specify do
-        expect(@response[:status]).to be_true
+        expect(@response[:status]).to eql(true)
       end
     end
   end

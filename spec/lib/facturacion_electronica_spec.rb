@@ -47,7 +47,9 @@ describe FacturacionElectronica do
         end
 
         it 'successfully canceled' do
-          expect(subject.cancel_cfdi(request)).to be_true
+          response = subject.cancel_cfdi(request)
+
+          expect(response[:success][:message]).to match(/CFDI Cancelado./)
         end
       end
 
@@ -75,11 +77,11 @@ describe FacturacionElectronica do
       end
 
       it 'returns a valid stamped bill' do
-        expect(@response[:status]).to be_true
+        expect(@response[:status]).to eql(true)
       end
 
       it 'contains a valid SAT rining' do
-        expect(@response[:xml]).to include('<cfdi:Complemento><tfd:TimbreFiscalDigital')
+        expect(@response[:xml]).to include('<tfd:TimbreFiscalDigital')
       end
     end
 
@@ -98,7 +100,7 @@ describe FacturacionElectronica do
           end
 
           it 'returns an invalid status' do
-            expect(@response[:status]).to be_false
+            expect(@response[:status]).to eql(false)
           end
 
           it 'returns an error message' do
@@ -113,7 +115,7 @@ describe FacturacionElectronica do
           end
 
           it 'returns an invalid status' do
-            expect(@response[:status]).to be_false
+            expect(@response[:status]).to eql(false)
           end
 
           it 'returns an error message' do
@@ -136,7 +138,7 @@ describe FacturacionElectronica do
           end
 
           it 'returns an invalid status' do
-            expect(@response[:status]).to be_false
+            expect(@response[:status]).to eql(false)
           end
 
           it 'returns an error message' do
@@ -151,7 +153,7 @@ describe FacturacionElectronica do
           end
 
           it 'returns an invalid status' do
-            expect(@response[:status]).to be_false
+            expect(@response[:status]).to eql(false)
           end
 
           it 'returns an error message' do
@@ -175,7 +177,7 @@ describe FacturacionElectronica do
           end
 
           it 'returns an invalid status' do
-            expect(@response[:status]).to be_false
+            expect(@response[:status]).to eql(false)
           end
 
           it 'returns an error message' do
@@ -190,7 +192,7 @@ describe FacturacionElectronica do
           end
 
           it 'returns an invalid status' do
-            expect(@response[:status]).to be_false
+            expect(@response[:status]).to eql(false)
           end
 
           it 'returns an error message' do
@@ -214,7 +216,7 @@ describe FacturacionElectronica do
           end
 
           it 'returns an invalid status' do
-            expect(@response[:status]).to be_false
+            expect(@response[:status]).to eql(false)
           end
 
           it 'returns an error message' do
@@ -229,7 +231,7 @@ describe FacturacionElectronica do
           end
 
           it 'returns an invalid status' do
-            expect(@response[:status]).to be_false
+            expect(@response[:status]).to eql(false)
           end
 
           it 'returns an error message' do
@@ -260,7 +262,8 @@ describe FacturacionElectronica do
         end
 
         it 'returns a valid response' do
-          expect(subject.register_rfc(request)).to be_true
+          response = subject.register_rfc(request)
+          expect(response[:status]).to eql(true)
         end
       end
 
@@ -279,7 +282,7 @@ describe FacturacionElectronica do
             biller:              biller,
           }
         end
-        let(:error_message){ 'Contrasenia de la clave privada invalida.' }
+        let(:error_message){ 'Contraseña de la clave privada invalida.' }
 
         before do
           @response = subject.register_rfc(request)
